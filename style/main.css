@@ -1,0 +1,95 @@
+@font-face {
+    font-family: IRANSans;
+    src: url('IRANSans.ttf');
+}
+
+*:not(#editor-container *) {
+    font-family: IRANSans;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+body {
+    overflow-x: hidden;
+    background: #1e1e1e;
+}
+
+html,
+body,
+.container-fluid,
+.container-fluid>.row,
+.left-block,
+.right-block {
+    height: 100% !important;
+}
+
+.bar {
+    height: 60px;
+    background-color: #272727;
+    display: flex;
+    align-items: center;
+}
+
+#editor-container {
+    height: calc(100% - 60px);
+    width: 100%;
+}
+
+.right-block {
+    overflow-y: auto;
+}
+
+.right-block table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.finish {
+    font-size: 135%;
+}
+
+@media (max-width: 767.98px) {
+    .left-block {
+        height: 65% !important;
+    }
+
+    .right-block {
+        height: 35% !important;
+    }
+
+    .bar button {
+        font-size: 80%;
+    }
+
+    .bar #loop-input {
+        font-size: 75%;
+        width: 65px !important;
+        padding-left: 3px;
+        padding-right: 1px;
+    }
+
+    .bar .error {
+        font-size: 70%;
+    }
+}
+
+#helpModal .table th:nth-child(1),
+#helpModal .table td:nth-child(1) {
+    text-align: left;
+    direction: ltr;
+}
+
+#helpModal .table th:nth-child(2),
+#helpModal .table td:nth-child(2) {
+    text-align: right;
+    direction: rtl;
+}
