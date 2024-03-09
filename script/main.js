@@ -3,7 +3,7 @@ let editor;
 require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' } });
 require(['vs/editor/editor.main'], function () {
     function fontSize() {
-        return window.innerWidth <= 768 ? 18 : 20;
+        return window.innerWidth <= 768 ? 16 : 20;
     }
 
     editor = monaco.editor.create(document.getElementById('editor-container'), {
