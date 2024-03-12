@@ -39,6 +39,9 @@ loopInputElement.val(localStorage.LOOP || '');
 
 // Start button function
 $("#btn-start").on("click", function () {
+    // Check editor loaded
+    if (!editor) return;
+
     // Get loop
     const loopValue = loopInputElement.val();
     let loop = Number(loopValue);
@@ -93,8 +96,8 @@ function defineWorker() {
         if (type === 'result') {
             const { result, attempt } = data;
             tableRowAdder(`
-            <td class="text-center">${result}</td>
-            <td class="text-center">${attempt}</td>
+                <td class="text-center">${result}</td>
+                <td class="text-center">${attempt}</td>
             `);
         } else if (type === 'finish') {
             const { result, time } = data;
