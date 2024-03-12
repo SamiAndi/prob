@@ -3,7 +3,7 @@ function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function selectRandomFromArray(arr, k) {
+function randomSelect(arr, k) {
     const shuffledArray = shuffleArray([...arr]);
     return shuffledArray.slice(0, k);
 }
