@@ -1,4 +1,4 @@
-const functions = `
+// Core functions
 function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -61,14 +61,15 @@ function median(arr) {
 function sorted(arr) {
     return arr.slice().sort((a, b) => a - b);
 }
-`
 
-self.onmessage = function (event) {
+
+// Worker config
+self.addEventListener('message', function(event) {
     const { loop, problem } = event.data;
     let wrappedProblem;
     try {
-        wrappedProblem = (new Function(`${functions}return function(){${problem}}`))();
-        Boolean(wrappedProblem());
+        wrappedProblem = new Function(problem);
+        !!wrappedProblem();
     } catch (err) {
         self.postMessage(['error', 'Error: ' + err.message]);
         wrappedProblem = undefined;
@@ -77,7 +78,7 @@ self.onmessage = function (event) {
         const sTime = Date.now();
         let trues = 0;
         for (let i = 1; i <= 100; i++) {
-            for (let j = 1; j <= loop; j++) trues += Boolean(wrappedProblem());
+            for (let j = 1; j <= loop; j++) trues += !!wrappedProblem();
             self.postMessage(['result', {
                 result: (trues / loop / i * 100).toFixed(5) + '%',
                 attempt: i
@@ -88,4 +89,4 @@ self.onmessage = function (event) {
             time: (Date.now() - sTime) / 1e3 + 's'
         }]);
     }
-};
+});

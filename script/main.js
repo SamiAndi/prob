@@ -38,7 +38,7 @@ loopInputElement.val(localStorage.LOOP || '');
 
 
 // Start button function
-$("#btn-start").on("click", function () {
+$('#btn-start').on('click', function () {
     // Check editor loaded
     if (!editor) return;
 
@@ -66,7 +66,7 @@ $("#btn-start").on("click", function () {
 
 
 // Stop button function
-$("#btn-stop").on("click", function () {
+$('#btn-stop').on('click', function () {
     window.location.reload();
 });
 
