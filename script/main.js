@@ -1,33 +1,6 @@
-// Define monaco editor and functionalities
+// Define editor & worker
 let editor;
-require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' } });
-require(['vs/editor/editor.main'], function () {
-    function fontSize() {
-        return window.innerWidth <= 768 ? 16 : 20;
-    }
-
-    editor = monaco.editor.create(document.getElementById('editor-container'), {
-        value: localStorage.PROBLEM || `// احتمال یک آمدن تاس\r\nconst x = random(1, 6)\r\nreturn x == 1`,
-        language: 'javascript',
-        theme: 'vs-dark',
-        minimap: { enabled: false },
-        fontSize: fontSize()
-    });
-
-    editor.onDidChangeModelContent(function () {
-        localStorage.PROBLEM = editor.getValue();
-    });
-
-    $(window).on('resize', function () {
-        editor.layout();
-        editor.updateOptions({ fontSize: fontSize() });
-    });
-
-    $('.spinner-border').parent().remove();
-});
-
-
-// Define worker
+defineEditor();
 let worker;
 defineWorker();
 
@@ -81,7 +54,7 @@ function tableRowAdder(row) {
 
 
 // toggle buttons after process finished
-function finishToggle() {
+function finishedToggle() {
     $('#btn-start').removeClass('d-none');
     $('#btn-stop').addClass('d-none');
 }
@@ -103,11 +76,11 @@ function defineWorker() {
             const { result, time } = data;
             tableRowAdder(`<td colspan="2" class="text-center finish">${result}</td>`);
             tableRowAdder(`<td colspan="2" class="text-center finish">${time}</td>`);
-            finishToggle();
+            finishedToggle();
             defineWorker();
         } else if (type === 'error') {
             $('.error').text(data);
-            finishToggle();
+            finishedToggle();
             defineWorker();
         } else {
             window.location.reload();
