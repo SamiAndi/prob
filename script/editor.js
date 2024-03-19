@@ -1,7 +1,24 @@
 function defineEditor() {
     const editorContainer = document.getElementById('editor-container');
-    const defaultValue = localStorage.PROBLEM || `// احتمال یک آمدن تاس\r\nconst x = random(1, 6)\r\nreturn x == 1`;
-    !(/Mobi|Android/i.test(navigator.userAgent)) ? loadMonacoEditor() : loadCodeMirrorEditor();
+    const defaultValue = localStorage.getItem('PROBLEM') || `// احتمال یک آمدن تاس\r\nconst x = random(1, 6)\r\nreturn x == 1`;
+
+
+    function finalConfig() {
+        window.addEventListener('resize', function () {
+            editor.layout();
+        });
+
+        const spinner = document.querySelector('.spinner-border');
+        spinner?.parentNode?.remove();
+    }
+
+
+    if (!(/Mobi|Android/i.test(navigator.userAgent))) {
+        loadMonacoEditor();
+    } else {
+        loadCodeMirrorEditor();
+    }
+
 
     // Load Monaco Editor
     function loadMonacoEditor() {
@@ -11,12 +28,14 @@ function defineEditor() {
         });
     }
 
+
     // Load CodeMirror editor
     function loadCodeMirrorEditor() {
         loadFile('https://codemirror.net/6/codemirror.js', function () {
             initCodeMirrorEditor();
         });
     }
+
 
     // Init Monaco editor
     function initMonacoEditor() {
@@ -31,16 +50,13 @@ function defineEditor() {
             });
 
             editor.onDidChangeModelContent(function () {
-                localStorage.PROBLEM = editor.getValue();
+                localStorage.setItem('PROBLEM', editor.getValue());
             });
 
-            $(window).on('resize', function () {
-                editor.layout();
-            });
-
-            $('.spinner-border').parent().remove();
+            finalConfig();
         });
     }
+
 
     // Init CodeMirror editor
     function initCodeMirrorEditor() {
@@ -68,22 +84,20 @@ function defineEditor() {
 
             dispatch: (transaction) => {
                 editor.update([transaction]);
-                localStorage.PROBLEM = editor.getValue();
+                localStorage.setItem('PROBLEM', editor.getValue());
             }
         });
         editor.getValue = () => editor.state.doc.toString();
         editor.layout = () => editor.dom.style.height = editorContainer.clientHeight + 'px';
-
         editor.layout();
-        $(window).on('resize', function () {
-            editor.layout();
-        });
 
-        $(editor.dom).css('background-color', 'transparent');
-        $(editor.dom).find('.cm-gutters').css('background-color', '#212428');
-        $('.spinner-border').parent().remove();
+        editor.dom.style.backgroundColor = 'transparent';
+        const cmGutters = editor.dom.querySelector('.cm-gutters');
+        cmGutters.style.backgroundColor = '#212428';
+        finalConfig();
     }
 
+    
     // File loader function
     function loadFile(url, callback) {
         const fileType = url.endsWith('.css') ? 'css' : 'js';

@@ -1,3 +1,12 @@
+// Define elements
+const errorElement = document.querySelector('.error');
+const btnStart = document.getElementById('btn-start');
+const btnStop = document.getElementById('btn-stop');
+const loopInput = document.getElementById('loop-input');
+const rightBlock = document.querySelector('.right-block');
+const tableBody = document.querySelector('.right-block table tbody');
+
+
 // Define editor & worker
 let editor;
 defineEditor();
@@ -5,30 +14,30 @@ let worker;
 defineWorker();
 
 
-// Define loop input element
-const loopInputElement = $('#loop-input');
-loopInputElement.val(localStorage.LOOP || '');
+// Default loop value
+loopInput.value = localStorage.getItem('LOOP') || '';
+loopInput.addEventListener('input', function () {
+    localStorage.setItem('LOOP', loopInput.value);
+});
 
 
 // Start button function
-$('#btn-start').on('click', function () {
+btnStart.addEventListener('click', function () {
     // Check editor loaded
     if (!editor) return;
 
     // Get loop
-    const loopValue = loopInputElement.val();
-    let loop = Number(loopValue);
+    const loop = Number(loopInput.value);
     if (!loop || loop < 1) {
-        loopInputElement.focus();
+        loopInput.focus();
         return;
     }
-    localStorage.LOOP = loopValue;
 
     // Empty table & error, Toggle buttons
-    $('.right-block tbody').html('');
-    $('.error').text('');
-    $('#btn-start').addClass('d-none');
-    $('#btn-stop').removeClass('d-none');
+    tableBody.innerHTML = '';
+    errorElement.textContent = '';
+    btnStart.classList.add('d-none');
+    btnStop.classList.remove('d-none');
 
     // Get problem
     const problem = editor.getValue();
@@ -39,24 +48,24 @@ $('#btn-start').on('click', function () {
 
 
 // Stop button function
-$('#btn-stop').on('click', function () {
+btnStop.addEventListener('click', function () {
     window.location.reload();
 });
 
 
 // tr adder function
 function tableRowAdder(row) {
-    $('.right-block tbody').append(`<tr>${row}</tr>`);
-    const el = $('.right-block');
-    const remainingSpace = el[0].scrollHeight - el.scrollTop() - el.innerHeight();
-    if (remainingSpace < 70) el.scrollTop(el[0].scrollHeight);
+    tableBody.insertAdjacentHTML('beforeend', `<tr>${row}</tr>`);
+    const el = rightBlock;
+    const remainingSpace = el.scrollHeight - el.scrollTop - el.clientHeight;
+    if (remainingSpace < 70) el.scrollTop = el.scrollHeight;
 }
 
 
 // toggle buttons after process finished
 function finishedToggle() {
-    $('#btn-start').removeClass('d-none');
-    $('#btn-stop').addClass('d-none');
+    btnStart.classList.remove('d-none');
+    btnStop.classList.add('d-none');
 }
 
 
@@ -79,7 +88,7 @@ function defineWorker() {
             finishedToggle();
             defineWorker();
         } else if (type === 'error') {
-            $('.error').text(data);
+            errorElement.textContent = data;
             finishedToggle();
             defineWorker();
         } else {
